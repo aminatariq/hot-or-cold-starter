@@ -23,7 +23,7 @@ $(document).ready(function() {
 	});
 	/*new game function*/
 	function newGame() {
-		randomNumber = generateNumber();
+		randomNumber = generatedNumber();
 		count = 0;
 		guessCount();
 		clearField();
@@ -31,7 +31,7 @@ $(document).ready(function() {
 		clearNumbers();
 	}	  
 	/*generate number*/
-	function generateNumber() {
+	function generatedNumber() {
 		generatedNumber = Math.floor((Math.random()*100)+1);
 		console.log("Generated number = " + generatedNumber);
 		return generatedNumber;
