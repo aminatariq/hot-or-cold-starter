@@ -13,7 +13,7 @@ $(document).ready(function(){
   	});
 
 });
-	/*variables*/
+	/*All variables used*/
 	var gameNumber;
 	var generatedNumber;
 	var guess;
@@ -37,7 +37,7 @@ $(document).ready(function(){
 		clearNumbers();
 	}	  
 	
-	/*generate number*/
+	/*Automatically generate number*/
 	function generateNumber() {
 		generatedNumber = Math.floor((Math.random()*100)+1);
 		console.log("Generated number = " + generatedNumber);
@@ -48,7 +48,7 @@ $(document).ready(function(){
 		event.preventDefault();
 		guess = $('#userGuess').val();
 		if (guess % 1 != 0) {
-			changeFeedback("please enter a whole number");
+			changeFeedback("Please enter a whole number");
    		 } else if (guess < 1 || guess > 100) {
     		changeFeedback("Please choose between 1 and 100");
     	} else {
