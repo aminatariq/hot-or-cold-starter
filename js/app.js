@@ -8,12 +8,15 @@ $(document).ready(function() {
   	$("a.close").click(function() {
   		$(".overlay").fadeOut(1000);
   	});
-	/*variables*/
+
+  	/* List of all variables*/
 	var gameNumber;
 	var generatedNumber;
 	var guess;
 	var count = 0;
 	var found = true;
+
+
 	/*New game*/
 	newGame(); 
 
@@ -30,13 +33,15 @@ $(document).ready(function() {
 		$('#feedback').text("Make your Guess");
 		clearNumbers();
 	}	  
-	/*generate number*/
+	
+	/*Automatically generate number*/
 	function generateNumber() {
 		generatedNumber = Math.floor((Math.random()*100)+1);
 		console.log("Generated number = " + generatedNumber);
 		return generatedNumber;
 	}
-	/*capture user guess*/
+
+	/*Capture player's guess*/
 	$('form').submit(function(event) {
 		event.preventDefault();
 		guess = $('#userGuess').val();
@@ -59,15 +64,16 @@ $(document).ready(function() {
 			}
 		} 
 	})
-	/*find difference*/
+
+	/*Calculate difference*/
  	function difference() { 
  		return Math.abs( generatedNumber - guess); 
  	}
-	/*change feedback area text*/
+	/*Give player feedback*/
 	var changeFeedback = function(text) { 
 		$('#feedback').text(text);
 	}
- 	/*feedback*/
+
  	function feedBack() {
  		if (difference() === 0) {
  			changeFeedback("You win!");
@@ -89,6 +95,7 @@ $(document).ready(function() {
 			return true;
 		}
 	}
+
 	/*guess count*/
 	function guessCount() {
  		$('#count').text(count);
