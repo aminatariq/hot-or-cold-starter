@@ -1,133 +1,111 @@
-$(document).ready(function() {
+$(document).ready(function(){
+	
+	/*--- Display information modal box ---*/
+  	$(".what").click(function(){
+    	$(".overlay").fadeIn(1000);
 
-    // Gererate Random Number
-    var answer = Math.floor((Math.random() * 100) + 1);
-    // $('div#rnum').text(answer);
+  	});
 
-    // Assign Vars
-    var oldGuess = 0;
-    var changeOldGuess = true;
-    var messageText = "message";
-    var count = 0;
+  	/*--- Hide information modal box ---*/
+  	$("a.close").click(function(){
+  		$(".overlay").fadeOut(1000);
+  	});
 
+});
+	/*variables*/
+	var gameNumber;
+	var generatedNumber;
+	var guess;
+	var count = 0;
+	var found = true;
+	/*New game*/
+	newGame(); 
 
-    // Start a new game
-    function newGame() {
-
-        $(".new").click(function() {
-            // alert("newclicked")
-
-            location.reload();
-
-        })
-    };
-
-    newGame();
-
-
-
-    /*--- Display information modal box ---*/
-    $(".what").click(function() {
-        $(".overlay").fadeIn(1000);
-    });
-    /*--- Hide information modal box ---*/
-    $("a.close").click(function() {
-        $(".overlay").fadeOut(1000);
-    });
-
-    function submitGuess(newGuess) {
-
-        // Calculate the user's guess from the answer
-        var guessDiffNew = Math.abs(answer - newGuess);
-        var guessDiffOld = Math.abs(answer - oldGuess);
-
-        // List numbers that user guesses if it's not empty
-        if (newGuess !== '' && !isNaN(newGuess)) {
-            $('#guessList').append("<li>" + newGuess + "</li>")
-                // Count the number of guesses
-            $('#count').html(function(i, val) {
-                return +val + 1
-            });
-        }
-
-
-        // Check to see is the input is nto a number
-        if (isNaN(newGuess)) {
-            changeOldGuess = false;
-            return "That's not a number.";
-        } else if ((newGuess < 1) || (newGuess > 100)) {
-            changeOldGuess = false;
-            return "Pick a number between 1 and 100.";
-        }
-
-        function checkAbs() {
-            // Return if user is getting closer
-            if (guessDiffNew > 30) {
-                $('h2#feedback').text("Very Cold");
-                return "You are frozen";
-            } else if (guessDiffNew > 20) {
-                $('h2#feedback').text("cold");
-                return "You are cold";
-            } else if (guessDiffNew > 10) {
-                return "You are warm";
-                $('h2#feedback').text("Warm");
-            } else {
-                return "You are hot";
-                $('h2#feedback').text("hot");
-            }
-        }
-
-        function checkDiff() {
-            if (oldGuess == 0) {
-                return ".";
-            } else if (guessDiffNew > guessDiffOld) {
-                return " and you are getting colder.";
-            } else if (guessDiffNew < guessDiffOld) {
-                return " and you are getting warmer.";
-            } else {
-                return ".";
-            }
-        }
-
-        return (checkAbs() + checkDiff());
-
-    }
-
-    $("#guessButton").click(submit);
-    $("#userGuess").keyup(function(event) {
-        if (event.keyCode == 13) {
-            //$("#guessButton").click();
-        }
-    });
-
-    function submit() {
-
-        var newGuess = $('#userGuess').val();
-        if (newGuess == answer) {
-
-            $('#feedback').attr('class', 'hot');
-            $('#feedback').html("You are correct! Click on New game to try again.");
-            answer = Math.floor((Math.random() * 100) + 1);
-            oldGuess = 0;
-            return;
-        }
-
-        $('#feedback').html(submitGuess(newGuess));
-        console.log("old guess is " + oldGuess + " and the answer is " + answer);
-        if (changeOldGuess) {
-            oldGuess = newGuess;
-        } else {
-            changeOldGuess = true;
-        }
-
-    }
-
-    /* Prevent click on guess submit button from refrshing DOM */
-    $('form').on('click', '#guessButton', function(e) {
-        e.preventDefault();
-    });
-
-// Other
-
-
+	$(".new").click(function(event) {
+		event.preventDefault();
+		newGame();
+	});
+	/*new game function*/
+	function newGame() {
+		randomNumber = generateNumber();
+		count = 0;
+		guessCount();
+		clearField();
+		$('#feedback').text("Make your Guess");
+		clearNumbers();
+	}	  
+	/*generate number*/
+	function generateNumber() {
+		generatedNumber = Math.floor((Math.random()*100)+1);
+		console.log("Generated number = " + generatedNumber);
+		return generatedNumber;
+	}
+	/*capture user guess*/
+	$('form').submit(function(event) {
+		event.preventDefault();
+		guess = $('#userGuess').val();
+		if (guess % 1 != 0) {
+			changeFeedback("please enter a whole number");
+   		 } else if (guess < 1 || guess > 100) {
+    		changeFeedback("Please choose between 1 and 100");
+    	} else {
+			if (found) {
+				console.log("user choice " + guess);
+				count += 1;
+				difference();
+				feedBack();
+				guessCount();
+				clearField();
+				trackNumbers(guess);
+				$('#userGuess').focus();
+			} else {
+				changeFeedback("You already won this game. \n\r Please start a new one.");
+			}
+		} 
+	})
+	/*find difference*/
+ 	function difference() { 
+ 		return Math.abs( generatedNumber - guess); 
+ 	}
+	/*change feedback area text*/
+	var changeFeedback = function(text) { 
+		$('#feedback').text(text);
+	}
+ 	/*feedback*/
+ 	function feedBack() {
+ 		if (difference() === 0) {
+ 			changeFeedback("You win!");
+ 			found = false;
+ 			return false;
+		} else if (difference() <= 10) {
+			changeFeedback("Breaking a sweat now");
+			return true;
+		} else if (difference() <= 20) {
+			changeFeedback("Getting warmer");
+			return true;
+		} else if (difference() <= 30) { 
+			changeFeedback("Man, it's getting chilly");
+			return true;
+		} else if (difference() <= 40) {
+			changeFeedback("Okay, now it's freezing");
+			return true;
+		} else {changeFeedback("Welcome to Saskatchewan!"); 
+			return true;
+		}
+	}
+	/*guess count*/
+	function guessCount() {
+ 		$('#count').text(count);
+	}
+	/*clear form field*/
+	function clearField(text) {
+		$('#userGuess').val(text);
+	}
+	/*track numbers*/
+	function trackNumbers(num) {
+		$('#guessList').append("<li>" + num + "</li>");
+	}
+	function clearNumbers() {
+		$("#guessList li").remove();
+	}
 });
