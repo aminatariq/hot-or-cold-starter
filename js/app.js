@@ -19,14 +19,15 @@ $(document).ready(function(){
 	var guess;
 	var count = 0;
 	var found = true;
-	/*New game*/
+	
+	/*Start a new game*/
 	newGame(); 
 
 	$(".new").click(function(event) {
 		event.preventDefault();
 		newGame();
 	});
-	/*new game function*/
+	
 	function newGame() {
 		randomNumber = generateNumber();
 		count = 0;
@@ -35,6 +36,7 @@ $(document).ready(function(){
 		$('#feedback').text("Make your Guess");
 		clearNumbers();
 	}	  
+	
 	/*generate number*/
 	function generateNumber() {
 		generatedNumber = Math.floor((Math.random()*100)+1);
